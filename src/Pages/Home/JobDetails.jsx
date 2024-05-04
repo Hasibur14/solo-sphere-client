@@ -1,38 +1,53 @@
-import { useContext } from "react";
+import axios from "axios";
+import { useContext, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import toast from "react-hot-toast";
 import { useLoaderData } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
-
 
 const JobDetails = () => {
 
     const job = useLoaderData();
 
-    const { _id, job_title, category, description, deadline, min_price, max_price,buyer_email } = job || {}
+
+    const { _id, job_title, category, description, deadline, min_price, max_price, buyer } = job || {}
     const { user } = useContext(AuthContext);
 
+    const [startDate, setStartDate] = useState(new Date());
+
+
+
     const handleFromSubmission = async (e) => {
+        if (user.email === buyer?.email) return toast.error('Action not permitted!')
         e.preventDefault()
         const form = e.target
         const jobId = _id
-        const price = parseInt(form.price.value)
+        const price = parseFloat(form.price.value)
+        if (price < parseFloat(min_price)) return toast.error('Offer more or at least equal to Minimum price')
         const comment = form.comment.value
         const email = user?.email
-        // const buyer_email = buyer_email
         const status = 'pending'
-        // const deadline =
+        const deadline = startDate
 
         const bidData = {
             jobId,
             price,
             comment,
             email,
-            buyer_email,
+            buyer_email: buyer?.email,
             status,
             job_title,
             category,
-            deadline
+            deadline,
+            buyer
         }
-        console.log(bidData)
+        try {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/bid`, bidData)
+            console.log(data)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     return (
@@ -41,7 +56,7 @@ const JobDetails = () => {
             <div className='flex-1  px-4 py-7 bg-white rounded-md shadow-md md:min-h-[350px]'>
                 <div className='flex items-center justify-between'>
                     <span className='text-sm font-light text-gray-800 '>
-                        Deadline: {deadline}
+                        Deadline: {new Date(deadline).toLocaleDateString}
                     </span>
                     <span className='px-4 py-1 text-xs text-blue-800 uppercase bg-blue-200 rounded-full '>
                         {category}
@@ -61,13 +76,13 @@ const JobDetails = () => {
                     </p>
                     <div className='flex items-center gap-5'>
                         <div>
-                            <p className='mt-2 text-sm  text-gray-600 '>Name: Jhankar Vai.</p>
+                            <p className='mt-2 text-sm  text-gray-600 '>Name: {buyer?.name}</p>
                             <p className='mt-2 text-sm  text-gray-600 '>
-                                Email: jhankar@mahbub.com
+                                Email: {buyer?.email}
                             </p>
                         </div>
                         <div className='rounded-full object-cover overflow-hidden w-14 h-14'>
-                            <img src='' alt='' />
+                            <img src={buyer?.photo} alt='' />
                         </div>
                     </div>
                     <p className='mt-6 text-lg font-bold text-gray-600 '>
@@ -123,7 +138,10 @@ const JobDetails = () => {
                         <div className='flex flex-col gap-2 '>
                             <label className='text-gray-700'>Deadline</label>
 
-                            {/* Date Picker Input Field */}
+                            <DatePicker
+                                className="p-2 border w-full rounded-md"
+                                selected={startDate}
+                                onChange={(date) => setStartDate(date)} />
                         </div>
                     </div>
 

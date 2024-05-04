@@ -10,6 +10,30 @@ const Login = () => {
     const navigate = useNavigate()
     const { signIn, signInWithGoogle } = useContext(AuthContext);
 
+
+    // sign In
+    const handleSignIn = async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const email = form.email.value;
+        const password = form.password.value
+        console.log(email, password);
+
+        try {
+            const result = await signIn(email, password)
+            console.log(result)
+            navigate('/')
+            toast.success('Login successfully')
+        }
+        catch (error) {
+            console.log(error)
+            toast.error(error.message)
+        }
+    }
+
+
+
+    //Google sign In.....
     const handleGoogleSignIn = async () => {
         try {
             await signInWithGoogle()
@@ -84,7 +108,7 @@ const Login = () => {
 
                         <span className='w-1/5 border-b dark:border-gray-400 lg:w-1/4'></span>
                     </div>
-                    <form>
+                    <form onSubmit={handleSignIn}>
                         <div className='mt-4'>
                             <label
                                 className='block mb-2 text-sm font-medium text-gray-600 '
@@ -133,7 +157,7 @@ const Login = () => {
                         <span className='w-1/5 border-b  md:w-1/4'></span>
 
                         <Link
-                            to='/registration'
+                            to='/register'
                             className='text-xs text-gray-500 uppercase  hover:underline'
                         >
                             or sign up

@@ -1,10 +1,11 @@
 import { useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../Provider/AuthProvider';
 import titleImg from '../assets/images/logo.png';
 
 const Navbar = () => {
 
-    const { user } = useContext(AuthContext);
+    const { user, logOut } = useContext(AuthContext);
 
 
     return (
@@ -23,7 +24,7 @@ const Navbar = () => {
 
                     {
                         !user && <li>
-                            <div>Login</div>
+                            <Link to='/login'>Login</Link>
                         </li>
                     }
                 </ul>
@@ -60,7 +61,7 @@ const Navbar = () => {
                                 <div>Bid Requests</div>
                             </li>
                             <li className='mt-2'>
-                                <button className='bg-gray-200 block text-center'>Logout</button>
+                                <button onClick={logOut} className='bg-gray-200 block text-center'>Logout</button>
                             </li>
                         </ul>
                     </div>

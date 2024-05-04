@@ -13,7 +13,7 @@ import Slide from './Slider';
 const Carousel = () => {
     return (
         <>
-            <div className='mx-6 my-10 rounded-lg'>
+            <div className='container mx-auto my-10 rounded-lg'>
                 <Swiper
                     spaceBetween={30}
                     centeredSlides={true}

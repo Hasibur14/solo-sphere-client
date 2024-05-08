@@ -25,7 +25,7 @@ const TabCategories = () => {
                 <div className='container mx-auto my-10'>
                     <div className='text-center my-10 space-y-4'>
                         <h1 className='lg:text-3xl font-bold'>Browse By Categories</h1>
-                        <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Veniam adipisci repellendus maxime praesentium! Eius aperiam placeat</p>
+                        <p>Progressively visualize sustainable ROI without collaborative leadership skills. Phosfluorescently simplify pandemic mindshare through interactive e-commerce. </p>
                     </div>
                     <div className='flex items-center justify-center'>
                         <TabList>

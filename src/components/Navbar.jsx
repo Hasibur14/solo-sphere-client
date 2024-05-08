@@ -52,13 +52,13 @@ const Navbar = () => {
                                 <Link to='/addJob' className='justify-between'>Add Job</Link>
                             </li>
                             <li>
-                                <Link to='/myPostedJob'>My Posted Jobs</Link>
+                                <Link to='/my-posted-jobs'>My Posted Jobs</Link>
                             </li>
                             <li>
-                                <Link to='/myBid'>My Bids </Link>
+                                <Link to='/my-bid'>My Bids </Link>
                             </li>
                             <li>
-                                <Link to='/bidRequest'>Bid Requests</Link>
+                                <Link to='/bid-request'>Bid Requests</Link>
                             </li>
                             <li className='mt-2'>
                                 <button onClick={logOut} className='bg-gray-200 block text-center'>Logout</button>

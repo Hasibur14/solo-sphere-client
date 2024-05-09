@@ -1,15 +1,24 @@
-import { useContext } from "react";
+import axios from "axios";
+import { useContext, useEffect } from "react";
 import toast from "react-hot-toast";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 import loginImg from '../../assets/images/login.jpg';
 import titleImg from '../../assets/images/logo.png';
 
 const Login = () => {
 
+    const location = useLocation()
     const navigate = useNavigate()
-    const { signIn, signInWithGoogle } = useContext(AuthContext);
+    const { signIn, signInWithGoogle, user, loading } = useContext(AuthContext);
 
+    useEffect(() => {
+        if (user) {
+            navigate('/')
+        }
+    }, [navigate, user])
+
+    const from = location.state || '/'
 
     // sign In
     const handleSignIn = async (e) => {
@@ -22,31 +31,41 @@ const Login = () => {
         try {
             const result = await signIn(email, password)
             console.log(result)
-            navigate('/')
+            navigate(from, { replace: true })
             toast.success('Login successfully')
         }
         catch (error) {
             console.log(error)
             toast.error(error.message)
         }
-    }
-
-
+    };
 
     //Google sign In.....
     const handleGoogleSignIn = async () => {
         try {
-            await signInWithGoogle()
-            toast.success('SignIn successfully')
-            navigate('/')
+            // 1. google sign in from firebase
+            const result = await signInWithGoogle()
+            console.log(result.user)
+
+            //2. get token from server using email
+            const { data } = await axios.post(
+                `${import.meta.env.VITE_API_URL}/jwt`,
+                {
+                    email: result?.user?.email,
+                },
+                { withCredentials: true }
+            )
+            console.log(data)
+            toast.success('Sign In Successful')
+            navigate(from, { replace: true })
+        } catch (err) {
+            console.log(err)
+            toast.error(err?.message)
         }
-        catch (error) {
-            console.log(error)
-            toast.error(error?.message)
-        }
-    }
+    };
 
 
+    if (user || loading) return
 
 
     return (

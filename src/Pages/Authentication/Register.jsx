@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useContext } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -10,7 +11,9 @@ import registerImg from '../../assets/images/register.jpg';
 
 const Register = () => {
 
+
   const navigate = useNavigate();
+  const from = location.state || '/'
   const { createUser, signInWithGoogle, updateUserProfile, user, setUser } = useContext(AuthContext);
 
   const handleSignUp = async (e) => {
@@ -25,9 +28,18 @@ const Register = () => {
       const result = await createUser(email, password);
       console.log(result)
       await updateUserProfile(name, photo);
-      setUser({...user, photoURL: photo, displayName: name
+      //optimistic UI update
+      setUser({ ...user, photoURL: photo, displayName: name
       });
-      navigate('/');
+      const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {
+        email: result?.user?.email,
+      },
+      {
+        withCredentials: true
+      }
+      )
+      console.log(data)
+      navigate(from, { replace: true })
       toast.success('SignUp successfully');
     } catch (error) {
       toast.error(error.message);
@@ -38,7 +50,7 @@ const Register = () => {
   const handleGoogleSignIn = async () => {
     try {
       await signInWithGoogle();
-      navigate('/');
+      navigate(from, { replace: true })
       toast.success('SignIn successfully');
     } catch (error) {
       toast.error(error.message);

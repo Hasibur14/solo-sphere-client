@@ -34,7 +34,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/job/:id',
-                element: <JobDetails></JobDetails>,
+                element: <PrivetRoute><JobDetails></JobDetails></PrivetRoute>,
                 loader: ({ params }) => fetch(`${import.meta.env.VITE_API_URL}/job/${params.id}`)
             },
             {
@@ -48,15 +48,15 @@ const router = createBrowserRouter([
             },
             {
                 path: '/my-posted-jobs',
-                element: <MyPostedJobs></MyPostedJobs>
+                element: <PrivetRoute><MyPostedJobs></MyPostedJobs></PrivetRoute>
             },
             {
                 path: '/my-bid',
-                element: <MyBids></MyBids>
+                element: <PrivetRoute> <MyBids></MyBids></PrivetRoute>
             },
             {
                 path: '/bid-request',
-                element: <BidRequests></BidRequests>
+                element: <PrivetRoute><BidRequests></BidRequests></PrivetRoute>
             }
         ]
     },
